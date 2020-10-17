@@ -71,6 +71,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Helpers\EmployeeDataHelper.cs" />
+    <Compile Include="Models\EmployeesProjectCounter.cs" />
+    <Compile Include="Helpers\Mappers.cs" />
+    <Compile Include="Models\ProjectDays.cs" />
+    <Compile Include="Models\ProjectInfo.cs" />
     <Compile Include="Models\Employee.cs" />
     <Compile Include="Models\EmployeeBase.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />

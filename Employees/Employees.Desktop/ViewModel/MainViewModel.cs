@@ -61,7 +61,10 @@ namespace Employees.Desktop.ViewModel
             IEnumerable<IGrouping<int, EmployeeBase>> result = employeeDataList.OrderByDescending(x => x.TotalDays).GroupBy(y => y.ProjectId);
 
             // we map the visual data and populate it to the observable collection
-            this.EmployeeList = new ObservableCollection<Employee>(EmployeeDataHelper.MapEmployeeVisualData(result, employeeDataList));
+            this.EmployeeList = new ObservableCollection<Employee>(EmployeeDataHelper.MapTwoEmployeesWorkedInMultipleProjects(result, employeeDataList));
+
+            // this method is obsolete since it is not used, still keeping the logic for exercise purpose and references if needed
+            //this.EmployeeList = new ObservableCollection<Employee>(EmployeeDataHelper.MapEmployeeVisualData(result, employeeDataList));
         }
     }
 }
