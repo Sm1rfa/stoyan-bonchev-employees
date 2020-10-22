@@ -48,6 +48,22 @@ namespace Employees.Desktop.Helpers
             {
                 return Math.Abs((startB - endB).Days);
             }
+            if (startA < startB && endA == endB) 
+            {
+                return Math.Abs((startB - endA).Days);
+            }
+            if (startA > startB && endA == endB) 
+            {
+                return Math.Abs((startA - endA).Days);
+            }
+            if (startA == startB && endA > endB) 
+            {
+                return Math.Abs((startA - endB).Days);
+            }
+            if (startA == startB && endA < endB) 
+            {
+                return Math.Abs((startA - endA).Days);
+            }
 
             return 1;
         }

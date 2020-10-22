@@ -84,8 +84,9 @@ namespace Employees.Desktop.Helpers
                 EmployeesProjectCounter longestTimeOnProjectByColleagues = MapPairsProjectsAndTotalDays(employeeList, distinctPairs, employees, projectList);
 
                 // getting the information about the two employees and their requisites [no necessity of lists, reusing old logic]
-                List<EmployeeBase> employee1 = employeeList.Where(e => e.Id.Equals(longestTimeOnProjectByColleagues.EmployeeId) && e.ProjectId.Equals(longestTimeOnProjectByColleagues.ProjectDays.Max(y => y.ProjectId))).ToList();
-                List<EmployeeBase> employee2 = employeeList.Where(e => e.Id.Equals(longestTimeOnProjectByColleagues.Employee2Id) && e.ProjectId.Equals(longestTimeOnProjectByColleagues.ProjectDays.Max(y => y.ProjectId))).ToList();
+                var projectId = longestTimeOnProjectByColleagues.ProjectDays.OrderByDescending(x => x.TotalDays).Select(y => y.ProjectId).Take(1).FirstOrDefault();
+                List<EmployeeBase> employee1 = employeeList.Where(e => e.Id.Equals(longestTimeOnProjectByColleagues.EmployeeId) && e.ProjectId.Equals(projectId)).ToList();
+                List<EmployeeBase> employee2 = employeeList.Where(e => e.Id.Equals(longestTimeOnProjectByColleagues.Employee2Id) && e.ProjectId.Equals(projectId)).ToList();
 
                 // merge the lists
                 var finalResults = employee1.Concat(employee2).ToLookup(e => e.ProjectId).Select(z => z.Aggregate((e1, e2) => new Employee
@@ -95,7 +96,7 @@ namespace Employees.Desktop.Helpers
                     ProjectId = e1.ProjectId,
                     TotalDays = e1.TotalDays,
                     EmployeeTwoTotalDays = e2.TotalDays,
-                    WorkedDays = Math.Abs(e1.TotalDays - e2.TotalDays)
+                    WorkedDays = longestTimeOnProjectByColleagues.ProjectDays.Where(g => g.ProjectId.Equals(projectId)).Select(t => t.TotalDays).FirstOrDefault()
                 })).ToList();
 
                 foreach (var empl in finalResults)
@@ -164,7 +165,7 @@ namespace Employees.Desktop.Helpers
         }
 
         /// <summary>
-        /// Method to create pairs [logic can be improved]
+        /// Method to create pairs
         /// </summary>
         /// <param name="employeeList"></param>
         /// <returns></returns>
@@ -176,7 +177,10 @@ namespace Employees.Desktop.Helpers
             {
                 for (int j = 0; j < workerIds.Length; j++)
                 {
-                    pairList.Add(new KeyValuePair<int, int>(workerIds[i], workerIds[j]));
+                    if (!pairList.Where(x => x.Key == workerIds[j] && x.Value == workerIds[i]).Any()) 
+                    {
+                        pairList.Add(new KeyValuePair<int, int>(workerIds[i], workerIds[j]));
+                    }
                 }
             }
 
